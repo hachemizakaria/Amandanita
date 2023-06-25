@@ -30,7 +30,7 @@
       "plugin": {
         "internalName": "com.zakpex.apex.amandanita.da",
         "type": "dynamic action",
-        "demo": "https://apex.oracle.com/pls/apex/r/hachemi/amandanita205",
+        "demo": "https://apex.oracle.com/pls/apex/r/hachemi/amandanita",
         "previewImage": "https://raw.githubusercontent.com/hachemizakaria/Amandanita/blob/master/Preview.png"
       }
     }
