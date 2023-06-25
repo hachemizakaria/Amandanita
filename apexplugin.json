@@ -28,10 +28,10 @@
     "apex": {
       "versions": ["22.2", "23.1"],
       "plugin": {
-        "internalName": "com.zakpex.amandanita.da",
+        "internalName": "com.zakpex.apex.amandanita.da",
         "type": "dynamic action",
-        "demo": "https://apex.oracle.com/pls/apex/f?p=107360",
-        "previewImage": "https://raw.githubusercontent.com/aldocano29/AmandaDocxPrinter/master/img/Preview.png"
+        "demo": "https://apex.oracle.com/pls/apex/r/hachemi/amandanita205",
+        "previewImage": "https://raw.githubusercontent.com/hachemizakaria/Amandanita/blob/master/Preview.png"
       }
     }
   }
