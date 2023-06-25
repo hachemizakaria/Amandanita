@@ -10,14 +10,11 @@
     "Oracle Apex"
   ],
   "homepage": "https://github.com/hachemizakaria/Amandanita",
-  "bugs": {
-    "url": "https://github.com/hachemizakaria/Amandanita/issues",
-    "email": "hachemi.zakaria@zakpex.com"
-  },
+  "commercial" : "No",
   "license": "Apache License 2.0",
   "author": {
     "name": "hachemi zakaria",
-    "email": "hachemi.zakaria@zakpex.com"
+    "email": "hachemi.zakaria@gmail.com"
   },
   "repository": {
     "type": "git",
