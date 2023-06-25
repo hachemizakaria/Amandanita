@@ -6,6 +6,12 @@ Dynamic Action Plugin to Merge data from a query into a docx Template. based on 
 
 This plugin is client side renderer, it send data to client side where it use docxtemplater to generate the document based on template.
 
+## Enhancement
+
+Based on [AmandaDocxPrinter](https://github.com/aldocano29/AmandaDocxPrinter), the following enhancements were done :
+    - more secure query handling (data are sent to client side js instead of query it self).
+    - 
+
 ## Next Step
 
 - parameters
@@ -13,7 +19,7 @@ This plugin is client side renderer, it send data to client side where it use do
 
 ## Demo Application
 
-- Also the Demo Application is at [https://apex.oracle.com/pls/apex/r/hachemi/amandanita205]
+- Also the Demo Application is at (https://apex.oracle.com/pls/apex/r/hachemi/amandanita205)
 - Credentials: demo/password123
 
 ## Credit
