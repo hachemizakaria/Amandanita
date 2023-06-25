@@ -1,32 +1,38 @@
 {
-	"name": "AmandaDocxPrinter",
-	"version": "v1.6.1",
-	"description": "Dynamic Action Plugin for Report Printing using Docx Templates and JSON",
-	"keywords": ["JSON", "Report", "Printing"],
-	"homepage": "https://github.com/aldocano29/AmandaDocxPrinter",
-	"bugs": {
-		"url": "https://github.com/aldocano29/AmandaDocxPrinter/issues",
-		"email": "aldocano@xspanama.com"
-	},
-	"license": "Apache License 2.0",
-	"author": {
-		"name": "Aldo Cano",
-		"email": "aldocano@xspanama.com",
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/aldocano29/AmandaDocxPrinter.git"
-	},
-	"oracle": {
-		"versions": ["11.2.0.1", "12.1.0.1", "12.2.0.1"],
-		"apex": {
-			"versions": ["5.0.0", "5.1.0"],
-			"plugin": {
-				"internalName": "COM.AMANDASOFT.DOCXPRINTER",
-				"type": "dynamic action",
-				"demo" : "https://apex.oracle.com/pls/apex/f?p=107360",
-				"previewImage": "https://raw.githubusercontent.com/aldocano29/AmandaDocxPrinter/master/img/Preview.png"
-			}
-		}
-	}
+  "name": "Amandanita",
+  "version": "0.2.18",
+  "description": "Dynamic Action Plugin for Report Printing using Docxtemplater",
+  "keywords": [
+    "JSON",
+    "Report",
+    "Printing",
+    "Generate Document",
+    "Oracle Apex"
+  ],
+  "homepage": "https://github.com/hachemizakaria/Amandanita",
+  "bugs": {
+    "url": "https://github.com/hachemizakaria/Amandanita/issues",
+    "email": "zakpex@gmail.com"
+  },
+  "license": "Apache License 2.0",
+  "author": {
+    "name": "hachemi zakaria",
+    "email": "zakpex@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hachemizakaria/Amandanita.git"
+  },
+  "oracle": {
+    "versions": ["19.0"],
+    "apex": {
+      "versions": ["22.2", "23.1"],
+      "plugin": {
+        "internalName": "com.zakpex.amandanita.da",
+        "type": "dynamic action",
+        "demo": "https://apex.oracle.com/pls/apex/f?p=107360",
+        "previewImage": "https://raw.githubusercontent.com/aldocano29/AmandaDocxPrinter/master/img/Preview.png"
+      }
+    }
+  }
 }
