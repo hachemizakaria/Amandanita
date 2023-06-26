@@ -3,19 +3,7 @@
 */
 
 // Version number
-const version = "0.2.019";
-
-// sample data
-const datajson = {
-  first_name: "John",
-  last_name: "Doe",
-  phone: "0652455478",
-  description: "this is description",
-};
-
-// sample template
-//const templateurl = apex.env.APP_FILES + "tag-example.docx";
- 
+const version = "0.2.023";
 
 
 // amandanita.render is called from da action

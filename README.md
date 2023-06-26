@@ -12,10 +12,12 @@ Based on [AmandaDocxPrinter](https://github.com/aldocano29/AmandaDocxPrinter), t
     - more secure query handling (data are sent to client side js instead of query it self).
     - 
 
-## Next Step
+## Features
 
-- parameters
-- we can use 23c MLE modules to create a server side rendering, but a schema independent plugin is better ;) .
+- [ ] template from static files
+- [ ] 
+- [ ] parameters
+- [ ] use 23c MLE modules to create a server side rendering, but a schema independent plugin is better ;) .
 
 ## Demo Application
 
