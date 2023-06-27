@@ -1,9 +1,15 @@
 /*
   
+    -- @param1 templateurl      l_result.attribute_01         
+    -- @param2 report  filename l_result.attribute_02          
+
+    -- @param3 test mutliple items
+
 */
 
 // Version number
-const version = "0.2.023";
+const version = "0.2.027";
+
 
 
 // amandanita.render is called from da action
@@ -14,9 +20,13 @@ const amandanita = {
 
     var da = this;
     apex.debug.log("da.this", da);
-     
+
     // get templateurl
-    var v_templateurl =  apex.env.APP_FILES + da.action.attribute01;
+    var v_templateurl = apex.env.APP_FILES + da.action.attribute01;
+
+    // TODO test
+    console.log(da.action.attribute03);
+    
     
     // data json from ajax
     var v_data_json = {};
@@ -31,9 +41,9 @@ const amandanita = {
         },
         {
           success: function (ajax_result) {
-             
             
-            v_data_json =  JSON.parse(ajax_result.rows[0].JSON_DATA);
+            v_data_json = JSON.parse(ajax_result.rows);
+             
             resolve(); // Resolve the promise when the AJAX call is successful
           },
           error: function (xhr, status, message) {
@@ -69,7 +79,8 @@ const amandanita = {
       });
 
       // allow downloading the final report
-      saveAs(docxOut, "test.docx");
+      var v_report_name =  da.action.attribute02;
+      saveAs(docxOut, v_report_name || "test.docx");
     } catch (error) {
       console.error("Error ! ", error);
     }

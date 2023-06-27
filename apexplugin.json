@@ -1,6 +1,6 @@
 {
   "name": "Amandanita",
-  "version": "0.2.23",
+  "version": "0.2.27",
   "description": "Dynamic Action Plugin for Report Printing using Docxtemplater",
   "keywords": [
     "JSON",
@@ -23,7 +23,7 @@
   "oracle": {
     "versions": ["19.0"],
     "apex": {
-      "versions": ["22.2", "23.1"],
+      "versions": [ "23.1"],
       "plugin": {
         "internalName": "com.zakpex.apex.amandanita.da",
         "type": "dynamic action",

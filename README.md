@@ -10,18 +10,17 @@ This plugin is client side renderer, it send data to client side where it use do
 
 Based on [AmandaDocxPrinter](https://github.com/aldocano29/AmandaDocxPrinter), the following enhancements were done :
     - more secure query handling (data are sent to client side js instead of query it self).
-    - 
 
 ## Features
 
-- [ ] template from static files
-- [ ] 
-- [ ] parameters
-- [ ] use 23c MLE modules to create a server side rendering, but a schema independent plugin is better ;) .
+- [x] template from static files
+- [x] parameters
+- [ ] use 21c/23c server side MLE modules rendering,(schema dependent plugin) .
+- [ ] template from whatever.
 
 ## Demo Application
 
-- Also the Demo Application is at (https://apex.oracle.com/pls/apex/r/hachemi/amandanita205)
+- The Demo Application is at (https://apex.oracle.com/pls/apex/r/hachemi/amandanita)
 - Credentials: demo/password123
 
 ## Credit
