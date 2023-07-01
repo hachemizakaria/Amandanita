@@ -10,7 +10,7 @@
 */
 
 // Version number
-const version = "0.2.030";
+const version = "0.2.031";
 
 // amandanita.render is called from da action
 const amandanita = {
