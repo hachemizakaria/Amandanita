@@ -9,14 +9,18 @@ This plugin is client side renderer, it send data to client side where it use do
 ## Enhancement
 
 Based on [AmandaDocxPrinter](https://github.com/aldocano29/AmandaDocxPrinter), the following enhancements were done :
-    - more secure query handling (data are sent to client side js instead of query it self).
+
+- more secure query handling (data are sent to client side js instead of query it self).
+- query parameter witout submit page
 
 ## Features
 
 - [x] template from static files
 - [x] parameters
-- [ ] use 21c/23c server side MLE modules rendering,(schema dependent plugin) .
-- [ ] template from whatever.
+- [ ] query type ( json )
+- [ ] template 0 from query
+- [ ] use 21c/23c server side MLE modules rendering (schema independent plugin) .
+- [ ] template from db.
 
 ## Demo Application
 

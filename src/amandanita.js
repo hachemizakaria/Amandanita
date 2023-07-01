@@ -3,14 +3,14 @@
     -- @param1 templateurl      l_result.attribute_01         
     -- @param2 report  filename l_result.attribute_02          
 
-    -- @param3 test mutliple items
+    -- NIY@param3 type binding     l_result.attribute_03 
+    -- @param4 Pageitem to send    l_result.attribute_04 
+
 
 */
 
 // Version number
-const version = "0.2.027";
-
-
+const version = "0.2.030";
 
 // amandanita.render is called from da action
 const amandanita = {
@@ -22,12 +22,12 @@ const amandanita = {
     apex.debug.log("da.this", da);
 
     // get templateurl
-    var v_templateurl = apex.env.APP_FILES + da.action.attribute01;
+
+    var v_templateurl = da.action.attribute01;
 
     // TODO test
-    console.log(da.action.attribute03);
-    
-    
+    console.log(da.action.attribute04);
+
     // data json from ajax
     var v_data_json = {};
     var v_AjaxIdentifier = da.action.ajaxIdentifier;
@@ -37,13 +37,13 @@ const amandanita = {
       apex.server.plugin(
         v_AjaxIdentifier,
         {
-          x01: da.action.attribute01,
+          x01: "test", //da.action.attribute03 or 04 or 05, // string
+          pageItems: da.action.attribute04, //"#P1_DEPT1,#P1_DEPT2" TODO : do we need to send ?
         },
         {
           success: function (ajax_result) {
-            
             v_data_json = JSON.parse(ajax_result.rows);
-             
+
             resolve(); // Resolve the promise when the AJAX call is successful
           },
           error: function (xhr, status, message) {
@@ -79,7 +79,7 @@ const amandanita = {
       });
 
       // allow downloading the final report
-      var v_report_name =  da.action.attribute02;
+      var v_report_name = da.action.attribute02;
       saveAs(docxOut, v_report_name || "test.docx");
     } catch (error) {
       console.error("Error ! ", error);

@@ -1,19 +1,37 @@
 /*
-    amandanita v0.2.028
+    amandanita v0.2.030
 
-     @plugin1 NaN
-     @plugin2 separator
-     @param1 templateurl
-     @param2 report query
-     
-     @param4 NAN
-     @param5 report filename
-     @param7 binding source
-        @param3 static
-        @param4 PageItem
-        @param6 PageItems
-    @param8 template source    
+1. da call
+2. prepare js call
+    1. templateurl or template clob/blob
+    2. ? binding variable 
+3. js call
+    1. ? replace page items with values for binding 
+    2. call ajax
+        1. generate data from query
+            1. bind variable
+            2. execute query and return data to js
+    3. parse ajax result
+    4. merge data into template
+    5. download file
 
+     @plugin1 separator
+     @plugin2 Nan
+
+     @plugin_attr1      report filename
+     @plugin_attr2      report query
+     @plugin_attr3      query type (json vs rows)
+     @plugin_attr4      NaN
+     @plugin_attr5      NaN
+     @plugin_attr6      binding source type
+        @plugin_attr7   static
+        @plugin_attr8   PageItem
+        @plugin_attr9   PageItems
+     @plugin_attr10     template source type
+        @plugin_attr11  'StaticApplicationFiles' templateurl static app files Filename from static files (#APP_FILES#)
+        @plugin_attr12  'Database' db blob (select)
+        @plugin_attr13  'StaticFileNameFromPageItem' Page Item containing static Application file name
+    
 TODO
 - use of sys_context('APEX$SESSION' ...
 - use APEX_PLUGIN_UTIL.REPLACE_SUBSTITUTIONS
@@ -29,7 +47,7 @@ TODO
 
 function get_data_from_query(
     p_query         in varchar2,
-    p_ptr_values    in varchar2, /* 10;20;30;40*/
+    p_ptr_values    in apex_t_varchar2, /* 10;20;30;40*/
     p_separator     in varchar2 /* ; */
 
 )   return clob as
@@ -48,10 +66,11 @@ function get_data_from_query(
 begin
     -- check bind variable count
     l_query_ptr_count := regexp_count(p_query, '(:[[:alnum:]_]+)');
-    SELECT COUNT(*) INTO l_query_val_count FROM TABLE ( apex_string.split(p_ptr_values, p_separator) );
+    l_query_val_count := p_ptr_values.count;
+    htp.p(l_query_val_count);
     if l_query_ptr_count != l_query_val_count  THEN 
         --raise_application_error(-20000, 'Number of placeholders does not match number of parameter values');
-        return '{"error":"Number of placeholders does not match number of parameter values"}' ;
+        return '{"error":"Number of placeholders ' || l_query_ptr_count||' does not match number of parameter values '||l_query_val_count||'"}' ;
     end if;
 
     -- get bind variable names
@@ -59,8 +78,9 @@ begin
         ptr_name_array(i) := regexp_substr(p_query, '(:[[:alnum:]_]+)', 1, i);
     end loop;
     -- get values into  array
-    SELECT column_value BULK COLLECT INTO ptr_val_array
+    /*SELECT column_value BULK COLLECT INTO ptr_val_array
         FROM TABLE ( apex_string.split(p_ptr_values, p_separator) );
+    */    
 
     -- Prepare a cursor to select from query 
     l_cursor := dbms_sql.open_cursor;
@@ -68,10 +88,11 @@ begin
 
     -- bind all 
     for i IN 1..l_query_ptr_count loop
-        dbms_sql.bind_variable(l_cursor, ptr_name_array(i), ptr_val_array(i));
+        dbms_sql.bind_variable(l_cursor, ptr_name_array(i), p_ptr_values(i));
     end loop;
 
     -- execute and get the result
+
     dbms_sql.define_column(l_cursor, 1, l_clob);
     l_ignore := dbms_sql.execute_and_fetch(l_cursor); 
     dbms_sql.column_value(l_cursor, 1, l_clob); 
@@ -125,14 +146,12 @@ begin
         p_directory => p_plugin.file_prefix,
         p_check_to_add_minified => true
     );
-
     apex_javascript.add_library (
         p_name => 'pizzip',
         p_directory => p_plugin.file_prefix,
      --   p_requirejs_js_expression => 'pizzip',
         p_check_to_add_minified => true
     );
-    --#PLUGIN_FILES#pizzip.js
     apex_javascript.add_library (
         p_name => 'amandanita',
         p_directory => p_plugin.file_prefix,
@@ -144,17 +163,40 @@ begin
     l_result.ajax_identifier := apex_plugin.get_ajax_identifier; 
         
         -- @param1 templateurl
-        l_result.attribute_01          := apex_escape.html(p_dynamic_action.attribute_01);
-        -- @param2 report  filename
-        l_result.attribute_02          := apex_escape.html(p_dynamic_action.attribute_05);
+        -- l_result.attribute_01          := apex_escape.html(p_dynamic_action.attribute_01);
+        case p_dynamic_action.attribute_10
+                when 'StaticApplicationFiles'
+                    then l_result.attribute_01  := v('APP_FILES') || p_dynamic_action.attribute_11;
+                when 'Database'
+                    then l_result.attribute_01  := p_dynamic_action.attribute_12; --TODO Not implemented Yet
+                when 'StaticFileNameFromPageItem'
+                    then l_result.attribute_01  := v('APP_FILES') || v(p_dynamic_action.attribute_13);
+        end case;
         
-        -- @param3 test multiple items
+        -- @param2 report  filename
+        l_result.attribute_02          := apex_escape.html(p_dynamic_action.attribute_01);
+        
+        -- @param3 binding source type
         l_result.attribute_03          := p_dynamic_action.attribute_06;
 
-        -- @param3 bindings values  
-        --l_result.attribute_03          := apex_escape.html(p_dynamic_action.attribute_03);
-        -- @param2 filename 
-        --l_result.attribute_04          := apex_escape.html(p_dynamic_action.attribute_04);
+        -- @param4 binding values
+      --            := p_dynamic_action.attribute_06;
+        
+        -- prepare pageitems for js ajax call
+        case  p_dynamic_action.attribute_06 
+            when 'static'       
+                then l_result.attribute_04 := null;
+            
+            when 'PageItem'   -- from P1_DEPT           to #P1_DEPT
+                then l_result.attribute_04 := '#' || p_dynamic_action.attribute_08;
+
+            when 'PageItems'  -- from P1_DEPT1,P1_DEPT2 to #P1_DEPT1,#P1_DEPT2
+                --then l_result.attribute_04 := p_dynamic_action.attribute_09;
+                then select listagg('#' || column_value,',') within group (order by 1)
+                        into l_result.attribute_04
+                     from table(apex_string.split(p_dynamic_action.attribute_09,','))
+                     ;
+        end case; 
 
     return l_result;
 end amandanita_render;
@@ -172,8 +214,9 @@ FUNCTION amandanita_ajax (
     
     l_da_query     VARCHAR2(4000) := p_dynamic_action.attribute_02;
          
-    l_da_values_source VARCHAR2(4000) := p_dynamic_action.attribute_07;
-    l_da_values    VARCHAR2(4000)     := p_dynamic_action.attribute_03;
+    l_da_values_source VARCHAR2(4000) := p_dynamic_action.attribute_06;
+    --l_da_values    VARCHAR2(4000)     ;
+    l_da_values         apex_t_varchar2 ;
         --TODO : what if select from item , check substitutions ...... 
 
 begin
@@ -183,23 +226,24 @@ begin
         -- apex_json.write('rows', l_c); 
         
         -- get values depending on source
-         case 
-            when l_da_values_source = 'static'  -- TODO check substitutions ?? ,TODO check with
-                then  l_da_values := p_dynamic_action.attribute_03;
-
-            when l_da_values_source = 'PageItem' -- TODO eval point from plsql or client js ($v(p_dynamic_action.attribute_04))
-                then  l_da_values := apex_escape.html( v(p_dynamic_action.attribute_04));
-
-            when l_da_values_source = 'PageItems'  
+        case   l_da_values_source
+            when 'static'
+                then
+                    for c in (select column_value b from table(apex_string.split(p_dynamic_action.attribute_07,';'))) loop
+                        apex_string.push(l_da_values, c.b); 
+                    end loop;
+            when 'PageItem' -- P1_DEPT 
+                then
+                    for c in (select column_value b from table(apex_string.split(v(p_dynamic_action.attribute_08),';'))) loop
+                        apex_string.push(l_da_values, c.b); 
+                    end loop;
+            when 'PageItems' -- P1_DEPT1,P1_DEPT2
                 then 
-                    begin
-                        select apex_escape.html(listagg(v(column_value),';') within group (order by 1 )) into l_da_values
-                            from table (apex_string.split(p_dynamic_action.attribute_06, ','))
-                        ;
-                        
-                    end;
+                    for c in (select v(column_value) b from table(apex_string.split(p_dynamic_action.attribute_09,','))) loop
+                        apex_string.push(l_da_values, c.b); 
+                    end loop;
 
-            else null   ;
+
         end case;
 
 
