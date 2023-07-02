@@ -37,8 +37,8 @@ const amandanita = {
       apex.server.plugin(
         v_AjaxIdentifier,
         {
-          x01: "test", //da.action.attribute03 or 04 or 05, // string
-          pageItems: da.action.attribute04, //"#P1_DEPT1,#P1_DEPT2" TODO : do we need to send ?
+          x01: "test",  // string
+          pageItems: da.action.attribute04, //"#P1_DEPT1,#P1_DEPT2" 
         },
         {
           success: function (ajax_result) {

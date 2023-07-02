@@ -115,14 +115,7 @@ function amandanita_render(
 
     l_result apex_plugin.t_dynamic_action_render_result;
 
-    
-    --p_templateurl  VARCHAR2(4000) := p_dynamic_action.attribute_01;
-    --p_query           := apex_escape.html(p_dynamic_action.attribute_02);
-    -- p_filename result 
-    -- @param3 bindings values  
-        --l_result.attribute_03          := apex_escape.html(p_dynamic_action.attribute_03);
-        -- @param2 filename 
-        --l_result.attribute_04          := apex_escape.html(p_dynamic_action.attribute_04);
+     
 begin
 
     apex_plugin_util.debug_dynamic_action(
@@ -180,8 +173,6 @@ begin
         l_result.attribute_03          := p_dynamic_action.attribute_06;
 
         -- @param4 binding values
-      --            := p_dynamic_action.attribute_06;
-        
         -- prepare pageitems for js ajax call
         case  p_dynamic_action.attribute_06 
             when 'static'       
