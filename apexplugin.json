@@ -1,11 +1,10 @@
 {
   "name": "Amandanita",
-  "version": "0.2.31",
-  "description": "Dynamic Action Plugin for Report Printing using Docxtemplater",
+  "version": "0.2.32",
+  "description": "Dynamic Action Plugin to generate Report based on template using Docxtemplater",
   "keywords": [
-    "JSON",
+    "template",
     "Report",
-    "Printing",
     "Generate Document",
     "Oracle Apex"
   ],

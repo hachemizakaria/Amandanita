@@ -1,5 +1,5 @@
 /*
-    amandanita v0.2.031
+    amandanita v0.2.032
 
 1. da call
 2. prepare js call
@@ -47,6 +47,7 @@ TODO
 
 function get_data_from_query(
     p_query         in varchar2,
+    p_query_type    in varchar2,
     p_ptr_values    in apex_t_varchar2, /* 10;20;30;40*/
     p_separator     in varchar2 /* ; */
 
@@ -62,6 +63,7 @@ function get_data_from_query(
 
     l_cursor          INTEGER;
     l_ignore          INTEGER;
+    l_ref_cursor SYS_REFCURSOR;
 
 begin
     -- check bind variable count
@@ -92,15 +94,42 @@ begin
     end loop;
 
     -- execute and get the result
+    if p_query_type = 'json' then
+        begin -- json part
+            dbms_sql.define_column(l_cursor, 1, l_clob);
+            l_ignore := dbms_sql.execute_and_fetch(l_cursor); 
+            dbms_sql.column_value(l_cursor, 1, l_clob); 
 
-    dbms_sql.define_column(l_cursor, 1, l_clob);
-    l_ignore := dbms_sql.execute_and_fetch(l_cursor); 
-    dbms_sql.column_value(l_cursor, 1, l_clob); 
+            -- close the cursor
+            dbms_sql.close_cursor(l_cursor);
+        end ;
+    else 
+        BEGIN --rows part 
+            l_ignore := dbms_sql.execute_and_fetch(l_cursor); 
+            
+            -- converting to sysrefcursor
+            l_ref_cursor := dbms_sql.to_refcursor(l_cursor);
+            
+            -- use apex.write to write sysrefcursor to json clob
+            dbms_lob.createtemporary(l_clob, FALSE);
+            apex_json.initialize_clob_output(p_preserve => TRUE);
+            apex_json.open_object;
+            
+            apex_json.write( 'rows' , l_ref_cursor);-- signature 14 
+            apex_json.close_object;
+            dbms_lob.copy(l_clob, apex_json.get_clob_output, dbms_lob.getlength(apex_json.get_clob_output));
+            apex_json.free_output;
 
-    -- close the cursor
-    dbms_sql.close_cursor(l_cursor);
+            -- apex_write should close l_cursor , but ..? 
+            if l_ref_cursor%ISOPEN then 
+                CLOSE l_ref_cursor;
+            end if;
 
-    return l_clob;
+
+
+        end;
+    end if;
+    return nvl(l_clob,'{}');
     exception WHEN OTHERS THEN
         IF dbms_sql.is_open(l_cursor) THEN
             dbms_sql.close_cursor(l_cursor);
@@ -203,7 +232,8 @@ FUNCTION amandanita_ajax (
     
     l_clob  clob;
     
-    l_da_query     VARCHAR2(4000) := p_dynamic_action.attribute_02;
+    l_da_query      VARCHAR2(4000) := p_dynamic_action.attribute_02;
+    l_da_query_type VARCHAR2(4000) := p_dynamic_action.attribute_03;
          
     l_da_values_source VARCHAR2(4000) := p_dynamic_action.attribute_06;
     --l_da_values    VARCHAR2(4000)     ;
@@ -241,6 +271,7 @@ begin
         -- query with binding TODO check and ? convert to json? 
         l_clob := get_data_from_query(
                     p_query         => l_da_query,
+                    p_query_type    => l_da_query_type,
                     p_ptr_values    => l_da_values,
                     p_separator     => ';' --TODO to not be confused with internal apex seprator <,> 
                     );
