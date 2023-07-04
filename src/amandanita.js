@@ -10,7 +10,7 @@
 */
 
 // Version number
-const version = "0.2.031";
+const version = "0.2.032";
 
 // amandanita.render is called from da action
 const amandanita = {
@@ -43,6 +43,7 @@ const amandanita = {
         {
           success: function (ajax_result) {
             v_data_json = JSON.parse(ajax_result.rows);
+            //console.log(v_data_json);
 
             resolve(); // Resolve the promise when the AJAX call is successful
           },
